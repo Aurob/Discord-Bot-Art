@@ -112,6 +112,7 @@ class newImage():
                     self.errors.append("Background error: Hex value needs to be in the 6 digit format i.e. #abc123")
                 rgb = (rn(0,256),rn(0,256),rn(0,256))
             
+            #apply the background colors to the main image
             self.new_image[:] = rgb
 
         elif bg_query[0] == "*":                
@@ -129,8 +130,6 @@ class newImage():
                 url_error("Image links must begin with http:// or https://, assigning background to a random color")
 
         else:
-            #!!!TEMPORARY!!!#
-            #Find a friendlier way of retrieving background images, possibly google search API?
             if "http://" in bg_query[0:9] or "https://" in bg_query[0:9]:
                 error = "If you want to add a link, start the link with an asterik, i.e. *http://..."
             else:
@@ -240,6 +239,8 @@ class newImage():
         #self.set_image_size(100,100)
         self.add_background()
         self.add_subjects()
+        #The final image can be retrieved directly using:
+        #return self.new_image()
     
         
         
