@@ -15,11 +15,11 @@ Image creation based on discord markdown text input
     <ul>
     <li>end with 3 backticks</li>
     
-    <li>input must include a background denoted by -b/li>
+    <li>input must include a background denoted by -b</li>
     
-    <li>Clinks can be set for the background and meta images/li>
+    <li>Clinks can be set for the background and meta images</li>
     </ul>
     
-    <i>
-    <b style="color :#3b4df1">need to add more info</b>   
+   </i>
+   <b style="color :#3b4df1">need to add more info</b>   
 </html>
