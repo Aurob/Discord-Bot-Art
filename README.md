@@ -19,6 +19,7 @@ Image creation based on discord markdown text input
     
     <li>Clinks can be set for the background and meta images/li>
     </ul>
-    <b style="color :#3b4df1">need to add more info</b>   
+    
     <i>
+    <b style="color :#3b4df1">need to add more info</b>   
 </html>
