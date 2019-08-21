@@ -2,8 +2,7 @@
 //HTML script init
 function runit(){  
     console.log("hello");
-    
-    //runXO();
+
     zoom();
     runFileScroll(); // change name?
 }
@@ -133,7 +132,7 @@ function runFileScroll(){
     boundCnt++;
 }
 
-//Button Zoom
+//Zoom
 var zooming = false;
 w = 0;
 function zoom(){
@@ -153,14 +152,6 @@ function zoom(){
                     text.style.fontSize = bw*.1+'px';
                     console.log(text);
                 }
-            }
-        }
-        if(XOrun){
-            var buttons = document.querySelectorAll('.button');
-            (e.deltaY < 0) ? w+=10 : w-=10; //If scrolling down or up
-            for(var i = 0; i < buttons.length; i++){
-                buttons[i].style.width = w+'px';
-                buttons[i].style.height = w+'px';
             }
         }
     }
