@@ -15,28 +15,6 @@ function get(id){
 }
 //
 
-//Tic-Tac-Toe with buttons
-var XOrun;
-function runXO(){
-    XOrun = true;
-    board = get('board');
-
-    var button;
-    for(i=1;i<10;i++){
-        board.innerHTML += '<button onclick="XO(this)" class = "button" id='+i+'>&nbsp;</button>';
-        console.log(i);
-        (i%3==0) ? board.innerHTML+="<br>":'';
-    }
-}
-function XO(that){
-    var player = "O";
-    var b = [{1:'0',2:'0',3:'0'},{4:'0',5:'0',6:'0'},{7:'0',8:'0',9:'0'}];
-    if(XOrun){
-        that.innerHTML = player;
-        player = (player=="X") ? "O":"X";
-    }
-}
-
 var clicked;
 var cx = 0, cy = 0;
 var drawX = 0, drawY = 0;
@@ -69,6 +47,7 @@ function boundaryHover(e){
         var canvas = get('cnv'+e.target.parentElement.id);
         var context = canvas.getContext('2d');
         context.rect(drawX,drawY,1,1);
+        //DRAWING
         // context.beginPath();
         // context.strokeStyle = '#123456';
         // context.lineWidth = 1
@@ -88,13 +67,11 @@ function boundaryClick(e){
     if(clicked){
         clicked = false;
         var b = get(clickId);
-        b.style.zIndex = "-1";
-        //console.log("Clicked "+e.target.id);
+        b.style.zIndex = "-1"; //when not moving a boundary, move it to the back
     }else{
         clicked = true;
-    
     }
-    if(e.button == 2){
+    if(e.button == 2){ //right click
         clicked = false;
         var b = get(clickId);
         if(bndCanvas.indexOf(clickId) < 0){ //Add canvas element to a boundary
@@ -106,8 +83,6 @@ function boundaryClick(e){
             bndCanvas.push(clickId);
         }
         else{ //boundary already has a canvas
-            
-
             if(drawCanvas.indexOf(clickId)>-1){ //Canvas is in draw mode, turn off draw mode
                 drawCanvas.pop();
                 var bndCnvText = get('i'+clickId)
