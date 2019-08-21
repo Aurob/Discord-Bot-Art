@@ -1,10 +1,9 @@
-
 //HTML script init
 function runit(){  
     console.log("hello");
 
-    zoom();
-    runFileScroll(); // change name?
+    //zoom();
+    addBoundary(); // change name?
 }
 //
 
@@ -14,24 +13,18 @@ function get(id){
 }
 //
 
+function bndId(node){
+    var id = (node.target.id.startsWith('_f')) ? node.target.id : node.target.parentElement.id;
+    return id;
+}
+
 var clicked;
 var cx = 0, cy = 0;
-var drawX = 0, drawY = 0;
 var bndCanvas = [];
-var drawCanvas = []; //All boundaries that are being drawn on
+var bndImages = [];
 var clickId;
-var drawing;
 var del;
 
-
-function canvasDraw(e){
-    if(drawCanvas.indexOf(e.target.parentElement.id) > -1){
-        drawX = e.clientX;
-        drawY = e.clientY;
-        drawing = true;
-        console.log('drawing');
-    }
-}
 function boundaryHover(e){
     //console.log("Hovering in "+e.target.id);
 
@@ -41,68 +34,42 @@ function boundaryHover(e){
         del = false;
 
     }
-    if(clicked && drawCanvas.indexOf(e.target.parentElement.id)<0 && (e.target.id == clickId || e.target.parentElement.id == clickId)){
+    var hoverNode = bndId(e);
+
+    if(clicked && hoverNode==clickId){
         var b = get(clickId);
         b.style.position ='absolute';
-        b.style.zIndex = "1";
         b.style.left = e.x-(b.clientWidth/2)+'px';
         b.style.top = e.y-(b.clientHeight/2)+'px';
     }
-    if(drawing && drawCanvas.indexOf(e.target.parentElement.id) > -1){
-        console.log("drawww");
-        var canvas = get('cnv'+e.target.parentElement.id);
-        var context = canvas.getContext('2d');
-        context.rect(drawX,drawY,1,1);
-        //DRAWING
-        // context.beginPath();
-        // context.strokeStyle = '#123456';
-        // context.lineWidth = 1
-        // context.lineJoin = "round";
-        // context.moveTo(drawX, drawY);
-        // context.lineTo(e.clientX, e.clientY);
-        // context.closePath();
-        context.stroke();
- 
-        drawX = e.clientX;
-        drawY = e.clientY;
-    }
 }
+
 function boundaryClick(e){
-    console.log(e);
-    clickId = (e.target.id.startsWith('_f')) ? e.target.id : e.target.parentElement.id;
-    if(clicked){
-        clicked = false;
-        var b = get(clickId);
-        b.style.zIndex = "-1"; //when not moving a boundary, move it to the back
-    }else{
-        clicked = true;
-    }
-    if(e.button == 2){ //right click
-        clicked = false;
-        var b = get(clickId);
-        if(bndCanvas.indexOf(clickId) < 0){ //Add canvas element to a boundary
-            b.innerHTML += "<canvas id='cnv"+clickId+"' class='can'></canvas>";
-            var cnv = get('cnv'+clickId);
-            cnv.width = e.target.width;
-            cnv.hieght = e.target.height;
-            b.style.borderRadius = '10px';
-            bndCanvas.push(clickId);
-        }
-        else{ //boundary already has a canvas
-            if(drawCanvas.indexOf(clickId)>-1){ //Canvas is in draw mode, turn off draw mode
-                drawCanvas.pop();
-                var bndCnvText = get('i'+clickId)
-                bndCnvText.remove();
-            }else{ //Canvas not in draw mode, turn on draw mode
-                b.innerHTML+="<i id='i"+clickId+"'>Drawing</i>";
-                drawCanvas.push(clickId);
-            }
+    
+    if(e.button != 2){
+        var b = get(bndId(e));
+        if(clicked){
+            clicked = false;
+            clickId = '';
+            if(bndImages.indexOf(bndId(e)) < 0){
+                b.style.borderColor = "black";
+            } else b.style.border = '';
+            
+            b.style.zIndex = "-1"; //when not moving a boundary, move it to the back
+        }else {
+            console.log(e); 
+            clickId = bndId(e);
+            b.style.border = "solid";
+            b.style.borderColor = "red";
+            b.style.zIndex = "0";
+            clicked = true;
         }
     }
 }
-function fileDrop(e, dragging){
-    console.log(e);
-    if(!dragging){
+
+function fileDrop(e, bg){
+    if(e){
+        console.log(e);
         id = e.target.id;
         
         e.stopPropagation();
@@ -110,85 +77,109 @@ function fileDrop(e, dragging){
          
         var items = e.dataTransfer.items;
         var files = e.dataTransfer.files;
-        console.log(e);
-        if(items){
-            var boundary = get(id);
-            boundary.children[0].src = e.dataTransfer.getData('text/x-moz-url-data');
-            boundary.children[0].style.height = "100%";
-            boundary.children[0].style.width = "100%";
-            boundary.children[0].style.zIndex = "0";
-        }
-        
-        else if(files){
+
+
+        if(files.length > 0){
             if(files[0].type.startsWith('image')){
                 console.log(files[0]);
-                var boundary = get(id);
+                
                 let reader = new FileReader()
                 reader.readAsDataURL(files[0])
                 reader.onloadend = function() {
-                    boundary.children[0].src = reader.result;
-                    boundary.children[0].style.height = "100%";
-                    boundary.children[0].style.width = "100%";
-                    boundary.children[0].style.zIndex = "0";
+                    if(bg){
+                        document.body.style.backgroundImage = "url("+reader.result+")";
+                    }else{
+                        var boundary = get(id);
+                        boundary.children[1].src = reader.result;
+                        boundary.children[1].style.height = "100%";
+                        boundary.children[1].style.width = "100%";
+                        boundary.children[1].style.zIndex = "0";
+                        boundary.style.border = '';
+                    }
                 }
             }
+            bndImages.push(id);
         }
-        b = get(id);
-        b.style.border = '';
-
+        else if(items.length > 0){
+            if(bg){
+                document.body.style.backgroundImage = "url("+e.dataTransfer.getData('text/x-moz-url-data')+")";
+            }
+            else{
+                var boundary = get(id);
+                boundary.children[1].src = e.dataTransfer.getData('text/x-moz-url-data');
+                boundary.children[1].style.height = "100%";
+                boundary.children[1].style.width = "100%";
+                boundary.children[1].style.zIndex = "0";
+                boundary.style.border = '';
+            }
+            bndImages.push(id);
+        }
         return false;
     }
 }
-//File Scroll
-var fileRun;
+
+function deleteBoundary(e){
+    var boundary = get(clickId);
+    boundary.remove();
+}
+
+//Boundaries
 var boundCnt = 0;
 var boundaries = [];
-function runFileScroll(e){
-
-    if(e){
-        del = true;
-    }else{
-        fileRun=true;
-        board = get('board');
-        board.innerHTML += "<div class='fz' id='_f"+boundCnt+"' style='width:10px; height:10px; border:solid 2px black;'><img id='_f"+boundCnt+"'/><p contenteditable='true' style='font-size:.1px;word-wrap:break-word;'>Text Here</p></div>";//
-        boundaries.push("_f"+boundCnt);
-        boundCnt++;
-    }
+function addBoundary(){
+    var boundId = "_f"+boundCnt;
+    board = get('board');
+    board.innerHTML += 
+        "<div class='fz' id='"+boundId+"' style='width:25px;height:25px;'>\
+        <img id='"+boundId+"'/>\
+        </div>";
+    boundaries.push(boundId);
+    boundCnt++;
 }
 
 //Zoom
 var zooming = false;
 w = 0;
-function zoom(){
-    function scr(e){
-        if(fileRun){
-            var scrollLocation = String(e.target.id);       
-            if(scrollLocation.startsWith('_f')){
-                fileBoundary = get(scrollLocation);
-                if(boundaries.indexOf(scrollLocation) > -1){
-                    bw = fileBoundary.style.width;
-                    bw = parseInt(String(bw).replace('px',''));
-                    (e.deltaY < 0) ? bw+=10 : bw-=10;
-                    
-                    fileBoundary.style.width = bw+'px';
-                    fileBoundary.style.height = bw+'px';
-                    text = fileBoundary.children[1];
-                    text.style.fontSize = bw*.1+'px';
-                    //console.log(text);
-                }
-            }
+function zoom(e){
+    var scrollLocation = String(e.target.id);       
+    if(scrollLocation.startsWith('_f')){
+        fileBoundary = get(scrollLocation);
+        if(boundaries.indexOf(scrollLocation) > -1){
+            bw = fileBoundary.style.width;
+            bw = parseInt(String(bw).replace('px',''));
+            (e.deltaY < 0) ? bw+=10 : bw-=10;
+            
+            fileBoundary.style.width = bw+'px';
+            fileBoundary.style.height = bw+'px';
+            text = fileBoundary.children[1];
+            text.style.fontSize = bw*.1+'px';
+            //console.log(text);
         }
-    }
-    window.addEventListener('wheel',scr);
+    }    
 }
 //
 
-window.addEventListener('mousedown', (e)=>canvasDraw(e));
-window.addEventListener('mousemove',(e)=> {(e.target.id!='') ? boundaryHover(e) : ''}); 
-document.addEventListener('dragover', (e)=> e.preventDefault(), false);
-window.addEventListener('drop', (e)=> fileDrop(e, false));
-window.addEventListener('click',(e)=> {(e.target.id!='') ? boundaryClick(e) : ''});
+//Events
+
+//Scrolling
+window.addEventListener('wheel',(zoom));
+
+//For tracking mouse location and boundary dragging
+window.addEventListener('mousemove',(e)=> {
+    (e.target.id!='') ? boundaryHover(e) : '';
+}); 
+window.addEventListener('click',(e)=> {
+    (e.target.id!='') ? boundaryClick(e) : '';
+});
+
+//For handling file drops
+window.addEventListener('dragover', (e)=> e.preventDefault(), false);
+window.addEventListener('drop', (e)=> {
+    (e.target.id!='') ? fileDrop(e, false) : fileDrop(e, true); //Sets image for boundary or background
+});
+
+//For creating and deleting boundaries
 window.addEventListener('keypress',(e)=>{
-    (e.key=='=') ? runFileScroll(false) : '';
-    (e.key=='-') ? runFileScroll(e) : '';
+    (e.key=='=') ? addBoundary(false) : '';
+    (e.key=='-') ? deleteBoundary(e) : '';
 });
