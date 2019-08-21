@@ -1,0 +1,18 @@
+{
+  "name": "mediaverse",
+  "version": "1.0.0",
+  "description": "",
+  "main": "nodeRun.js",
+  "scripts": {
+    "test": "echo ..."
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aurob/maybeArt/tree/master/jsArt"
+  },
+  "author": "rob",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
