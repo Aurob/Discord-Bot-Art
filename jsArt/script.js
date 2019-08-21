@@ -131,6 +131,7 @@ function addBoundary(){
     board = get('board');
     board.innerHTML += 
         "<div class='fz' id='"+boundId+"' style='width:25px;height:25px;'>\
+        <p contenteditable='true' style='font-size:.1px; word-wrap:break-word;'></p>\
         <img id='"+boundId+"'/>\
         </div>";
     boundaries.push(boundId);
@@ -151,7 +152,7 @@ function zoom(e){
             
             fileBoundary.style.width = bw+'px';
             fileBoundary.style.height = bw+'px';
-            text = fileBoundary.children[1];
+            text = fileBoundary.children[0];
             text.style.fontSize = bw*.1+'px';
             //console.log(text);
         }
