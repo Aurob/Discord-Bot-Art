@@ -7,4 +7,4 @@ app.use(express.static(__dirname));
 app.get('/*', function(req, res){
   res.sendFile('index.html', { root: __dirname });
 });
-http.listen(10001, () => console.log('running...'));
+http.listen(10001, '0.0.0.0');
