@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    
+    </head>
+    <div id='info'></div>
+    <body id='b' onload='runit()'>
+        <canvas id='main'></canvas>
+        <div id ="board" ondrop="fileDrop();">
+        </div>
+    </body>
+    <style>
+        #info{
+            
+            height:100%;
+            width:10%;
+            border: solid salmon 1px;
+            z-index: -2;
+        }
+        .button{
+            height:100px;
+            width:100px;
+            margin:10px;
+        }
+        #main{
+            pointer-events: none;
+            border: solid 2px maroon;
+            border-radius: 4px;
+            position: absolute;
+            box-sizing: border-box;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100vmax;
+            height: 90%;            
+        }
+        #board{
+            z-index: -1;
+            position: absolute;
+        }
+        html{
+            overflow: hidden;
+            background-size: 100% 100%;
+        }
+        #b{
+            background-size: 100% 100%;
+            float:left;
+        }
+        .fz{
+            float: left;
+            z-index: 0;
+            width: 10px; 
+            height: 10px; 
+            word-wrap: break-word;
+        }
+        img{
+        }
+        #main{
+             opacity: 0; /*To hide canvas temporarily*/
+        }
+        .can{
+            
+            position: absolute;
+            left:0;
+            top:0;
+            width:100%;
+            height:100%;
+        }
+        p{  
+            top: 10%;
+            position: absolute;
+            text-align:center;
+            word-wrap:break-word;
+        }
+    </style>
+    <script src='noNode.js'></script>
+    <!--<script src='stuff.js'></script>-->
+</html>
