@@ -2,7 +2,6 @@
 Semi-random image creation based on discord markdown text input
 <html>
   <i>using the ``` markup in Discord multiple lines can be easily entered</i>
-  <i>-p for position (0-9) in a 3x3x3 grid pattern</i>
   <img src='https://raw.githubusercontent.com/Aurob/maybeArt/master/inputText.png'/>
   <i>once submitted:</i>
   <img src='https://raw.githubusercontent.com/Aurob/maybeArt/master/exampleText.png'/>
